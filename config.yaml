@@ -1,0 +1,56 @@
+﻿# ProxyForge configuration.
+#
+# Start with:  proxyforge start --config config.yaml
+#
+# Every setting below is optional except `backends`; omitted keys fall back to
+# the defaults shown in internal/config.Default(). Unknown keys are REJECTED
+# rather than ignored, so a typo like `strategey:` fails loudly at startup
+# instead of silently leaving you on the default strategy.
+
+# Port clients connect to.
+port: 8080
+
+# Port for the admin API that `proxyforge status`, `add-backend` and
+# `remove-backend` talk to. Bound to 127.0.0.1 only.
+admin_port: 9090
+
+# One of: least_connections, random, round_robin, weighted_round_robin
+strategy: round_robin
+
+backends:
+  # weight is only consulted by weighted_round_robin; it defaults to 1.
+  - url: http://127.0.0.1:9001
+    weight: 5
+  - url: http://127.0.0.1:9002
+    weight: 1
+  - url: http://127.0.0.1:9003
+    weight: 1
+
+health_check:
+  # Durations are human-readable strings ("500ms", "5s", "1m30s"). A bare
+  # number is rejected, because "1500" is ambiguous and Go's own reading of it
+  # -- nanoseconds -- would surprise everybody.
+  interval: 5s
+
+  # Must be strictly less than interval, or probes overlap their own schedule.
+  timeout: 2s
+
+  path: /health
+
+  # Consecutive failures before a backend leaves rotation.
+  fail_threshold: 3
+
+  # Consecutive successes before it is readmitted. Any opposite result resets
+  # the count, which is what stops a half-broken backend flapping.
+  pass_threshold: 2
+
+# How long to let in-flight requests finish after Ctrl+C before cutting them off.
+shutdown_timeout: 30s
+
+log:
+  # debug, info, warn, error
+  level: info
+
+  # text  = key=value, readable in a terminal
+  # json  = one JSON object per line, for log aggregators
+  format: text

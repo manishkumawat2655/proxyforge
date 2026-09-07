@@ -1,0 +1,22 @@
+# Compiled binaries -- Go builds are cheap and reproducible, never commit them.
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries and coverage output
+*.test
+coverage.out
+coverage.html
+
+# Local runtime artifacts (dummy backend logs, built harness binary)
+.logs/
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+
+.claude/

@@ -1,0 +1,11 @@
+# Keep Go sources LF in the working tree, not just in the repo.
+#
+# Why: gofmt always writes LF. If git checks .go files out as CRLF (the Windows
+# default via core.autocrlf), every gofmt run rewrites the whole file and git
+# reports the entire file as modified. Pinning eol=lf here stops that loop.
+* text=auto eol=lf
+
+# PowerShell stays CRLF -- some older PS hosts are fussy about line endings.
+*.ps1 text eol=crlf
+
+*.exe binary
